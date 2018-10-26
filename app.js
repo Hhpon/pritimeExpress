@@ -25,6 +25,30 @@ app.get('/', (req, res) => {
     res.end('hello world');
 })
 
+app.get('/getPritime', (req, res) => {
+    let current = req.query.current;
+    let checkedList;
+    if (current == 0) {
+        checkedList = '第一节';
+    } else if (current == 1) {
+        checkedList = '第二节';
+    } else if (current == 2) {
+        checkedList = '第三节';
+    } else if (current == 3) {
+        checkedList = '第四节';
+    } else {
+        checkedList = '晚自习';
+    }
+    Pritime.find({ checkedList: { $all: [checkedList] } }, (err, docs) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } else {
+            res.json(docs);
+        }
+    })
+})
+
 app.post('/onLogin', (req, res) => {
     let openId = req.body.code;
     let userInfo = req.body.userInfo;
@@ -76,12 +100,21 @@ app.post('/issuePritime', async (req, res) => {
     personInfomation.nickName = userInfo.nickName;
     personInfomation.openId = openId;
 
-    console.log(personInfomation);
-    Pritime.create(personInfomation, (err, docs) => {
-
-    })
+    await Pritime.create(personInfomation)
 
     res.end('ok')
+})
+
+app.get('/getUserRecord', async (req, res) => {
+    let openId = req.query.openId;
+
+    let userRecord = await Pritime.findOne({ openId: openId })
+    console.log(userRecord);
+    if (userRecord) {
+        res.json(userRecord);
+    } else {
+        res.end('无用户记录');
+    }
 })
 
 app.listen(3000, () => {
