@@ -25,8 +25,9 @@ app.get('/', (req, res) => {
     res.end('hello world');
 })
 
-app.get('/getPritime', (req, res) => {
-    let current = req.query.current;
+app.post('/getPritime', (req, res) => {
+    let current = req.body.current;
+    let todayDate = req.body.todayDate;
     let checkedList;
     if (current == 0) {
         checkedList = '第一节';
@@ -39,7 +40,7 @@ app.get('/getPritime', (req, res) => {
     } else {
         checkedList = '晚自习';
     }
-    Pritime.find({ checkedList: { $all: [checkedList] } }, (err, docs) => {
+    Pritime.find({ partimeDate: todayDate, checkedList: { $all: [checkedList] } }, (err, docs) => {
         if (err) {
             console.log(err);
             res.send(err);
@@ -113,7 +114,7 @@ app.get('/getUserRecord', async (req, res) => {
     if (userRecord) {
         res.json(userRecord);
     } else {
-        res.end('无用户记录');
+        res.send('无用户记录');
     }
 })
 
