@@ -123,6 +123,41 @@ app.get('/getUserRecord', async (req, res) => {
     }
 })
 
+app.get('/getOrder', async (req, res) => {
+    let openid = req.query.openid;
+    let navigatorType = req.query.navigatorType;
+    let orderStatus = 0;
+
+    if (navigatorType === 'onGoing') {
+        orderStatus = 1;
+    } else if (navigatorType === 'onCompleting') {
+        orderStatus = 2;
+    }
+
+    let order = await Pritime.find({ openId: openid, orderStatus: orderStatus });
+
+    if (order) {
+        res.json(order);
+        return;
+    }
+
+    res.end('order')
+})
+
+app.get('/editOrder', async (req, res) => {
+    let _id = req.query._id;
+    let editType = req.query.editType;
+
+    if (editType === 'complete') {
+        await Pritime.updateOne({ _id: _id }, { orderStatus: 2 })
+    } else if (editType === 'contact') {
+        await Pritime.updateOne({ _id: _id }, { orderStatus: 1 })
+    } else if (editType === 'del') {
+        await Pritime.remove({ _id: _id })
+    }
+    res.end('ok')
+})
+
 app.listen(3000, () => {
     console.log('Server listenning part 3000');
 })
