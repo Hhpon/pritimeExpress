@@ -7,9 +7,11 @@ const PritimeSchema = new mongoose.Schema({
     partimeDate: String,
     wechatNum: String,
     price: String,
+    note: String,
     checkedList: Array,
     avatarUrl: String,
     nickName: String,
+    orderStatus: Number,
     openId: String
 })
 

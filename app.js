@@ -90,9 +90,11 @@ app.post('/issuePritime', async (req, res) => {
     let openId = req.body.openId;
 
     for (let item in personInfomation) {
-        if (!personInfomation[item]) {
-            res.end('no');
-            return;
+        if (item !== 'note') {
+            if (!personInfomation[item]) {
+                res.end('no');
+                return;
+            }
         }
     }
 
@@ -100,6 +102,9 @@ app.post('/issuePritime', async (req, res) => {
     personInfomation.avatarUrl = userInfo.avatarUrl;
     personInfomation.nickName = userInfo.nickName;
     personInfomation.openId = openId;
+    personInfomation.orderStatus = 0;
+
+    console.log(personInfomation);
 
     await Pritime.create(personInfomation)
 
