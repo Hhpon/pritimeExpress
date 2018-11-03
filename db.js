@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:20811/schoolPritime', { useNewUrlParser: true });
+let env = process.env.NODE_ENV || 'development'
+let dbUrl = 'mongodb://127.0.0.1:20811/schoolPritime'
+
+if (env === 'development') {
+    dbUrl = 'mongodb://localhost/schoolPritime'
+}
+
+mongoose.connect(dbUrl, { useNewUrlParser: true });
 
 mongoose.connection.on('connected', function () {
     console.log('Mongoose connection open to' + 'mongodb://localhost:27017/schoolPritime');
