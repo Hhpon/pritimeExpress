@@ -153,7 +153,7 @@ app.get('/editOrder', async (req, res) => {
     } else if (editType === 'contact') {
         await Pritime.updateOne({ _id: _id }, { orderStatus: 1 })
     } else if (editType === 'del') {
-        await Pritime.remove({ _id: _id })
+        await Pritime.deleteOne({ _id: _id })
     }
     res.end('ok')
 })
