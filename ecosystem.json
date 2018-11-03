@@ -12,7 +12,7 @@
         }
     ],
     "deploy": {
-        "priTime": {
+        "production": {
             "user": "hhp",
             "host": [
                 "47.94.210.206"
@@ -20,7 +20,7 @@
             "port": "1221",
             "ref": "origin/master",
             "repo": "git@github.com:Hhpon/pritimeExpress.git",
-            "path": "/home/hhp/www/weapp/priTime",
+            "path": "/home/hhp/www/priTime/production",
             "ssh_options": "StrictHostKeyChecking=no",
             "post-deploy": "npm install && pm2 startOrRestart ecosystem.json --env production",
             "env": {
