@@ -196,14 +196,13 @@ app.get('/orderContact', async (req, res) => {
     let wechatNum = userInfo.wechatNum;
     let sex = userInfo.sex;
 
-    // Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum }, (err, doc) => {
-    //     if (err) {
-    //         res.end('no');
-    //         return;
-    //     }
-    //     res.end('ok');
-    // })
-    res.end('ok')
+    Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum }, (err, doc) => {
+        if (err) {
+            res.end('no');
+            return;
+        }
+        res.end('ok');
+    })
 })
 
 app.listen(3000, () => {
