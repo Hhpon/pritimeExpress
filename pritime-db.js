@@ -8,7 +8,7 @@ const PritimeSchema = new mongoose.Schema({
     wechatNum: String,
     price: String,
     note: String,
-    checkedList: Array,
+    timeRadio: String,
     avatarUrl: String,
     nickName: String,
     orderStatus: Number,

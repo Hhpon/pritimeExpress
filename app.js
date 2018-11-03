@@ -28,19 +28,20 @@ app.get('/', (req, res) => {
 app.post('/getPritime', (req, res) => {
     let current = req.body.current;
     let todayDate = req.body.todayDate;
-    let checkedList;
+    let timeRadio;
     if (current == 0) {
-        checkedList = '第一节';
+        timeRadio = '第一节';
     } else if (current == 1) {
-        checkedList = '第二节';
+        timeRadio = '第二节';
     } else if (current == 2) {
-        checkedList = '第三节';
+        timeRadio = '第三节';
     } else if (current == 3) {
-        checkedList = '第四节';
+        timeRadio = '第四节';
     } else {
-        checkedList = '晚自习';
+        timeRadio = '晚自习';
     }
-    Pritime.find({ partimeDate: todayDate, checkedList: { $all: [checkedList] } }, (err, docs) => {
+    
+    Pritime.find({ partimeDate: todayDate, timeRadio: timeRadio, orderStatus: 0 }, (err, docs) => {
         if (err) {
             console.log(err);
             res.send(err);
