@@ -7,6 +7,8 @@ if (env === 'development') {
     dbUrl = 'mongodb://localhost/schoolPritime'
 }
 
+console.log(dbUrl);
+
 mongoose.connect(dbUrl, { useNewUrlParser: true });
 
 mongoose.connection.on('connected', function () {
