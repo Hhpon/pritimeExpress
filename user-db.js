@@ -8,7 +8,11 @@ const UserSchema = new mongoose.Schema({
     province: String,
     city: String,
     language: String,
-    openId: String
+    openId: String,
+    name: String,
+    telNum: Number,
+    wechatNum: String,
+    sex: String
 })
 
 module.exports = mongoose.model('User', UserSchema);

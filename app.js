@@ -40,7 +40,7 @@ app.post('/getPritime', (req, res) => {
     } else {
         timeRadio = '晚自习';
     }
-    
+
     Pritime.find({ partimeDate: todayDate, timeRadio: timeRadio, orderStatus: 0 }, (err, docs) => {
         if (err) {
             console.log(err);
@@ -151,11 +151,58 @@ app.get('/editOrder', async (req, res) => {
 
     if (editType === 'complete') {
         await Pritime.updateOne({ _id: _id }, { orderStatus: 2 })
-    } else if (editType === 'contact') {
-        await Pritime.updateOne({ _id: _id }, { orderStatus: 1 })
     } else if (editType === 'del') {
         await Pritime.deleteOne({ _id: _id })
     }
+    res.end('ok')
+})
+
+app.post('/addUserInfo', (req, res) => {
+
+    let personInfomation = req.body.personInfomation;
+    let openId = req.body.openId;
+
+    for (let item in personInfomation) {
+        if (item !== 'note') {
+            if (!personInfomation[item]) {
+                res.end('no');
+                return;
+            }
+        }
+    }
+
+    let name = personInfomation.name;
+    let sex = personInfomation.sex;
+    let telNum = personInfomation.telNum;
+    let wechatNum = personInfomation.wechatNum;
+
+    User.updateOne({ openId: openId }, { name: name, sex: sex, telNum: telNum, wechatNum: wechatNum }, (err, doc) => {
+        if (err) {
+            res.end('no');
+            return;
+        }
+        res.end('ok');
+    });
+})
+
+app.get('/orderContact', async (req, res) => {
+    let _id = req.query._id;
+    let openId = req.query.openId;
+
+    const userInfo = await User.findOne({ openId: openId })
+
+    let name = userInfo.name;
+    let telNum = userInfo.telNum;
+    let wechatNum = userInfo.wechatNum;
+    let sex = userInfo.sex;
+
+    // Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum }, (err, doc) => {
+    //     if (err) {
+    //         res.end('no');
+    //         return;
+    //     }
+    //     res.end('ok');
+    // })
     res.end('ok')
 })
 
