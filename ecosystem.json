@@ -1,0 +1,30 @@
+{
+    "apps": [
+        {
+            "name": "priTime",
+            "script": "app.js",
+            "env": {
+                "COMMON_VARIABLE": "true"
+            },
+            "env_production": {
+                "NODE_ENV": "production"
+            }
+        }
+    ],
+    "deploy": {
+        "priTime": {
+            "user": "hhp",
+            "host": [
+                "47.94.210.206"
+            ],
+            "port": "1221",
+            "ref": "origin/master",
+            "repo": "git@github.com:Hhpon/pritimeExpress.git",
+            "path": "/home/hhp/www/website/priTime",
+            "ssh_options": "StrictHostKeyChecking=no",
+            "env": {
+                "NODE_ENV": "production"
+            }
+        }
+    }
+}
