@@ -136,13 +136,8 @@ app.get('/getOrder', async (req, res) => {
     }
 
     let order = await Pritime.find({ openId: openid, orderStatus: orderStatus });
-
-    if (order) {
-        res.json(order);
-        return;
-    }
-
-    res.end('order')
+    
+    res.json(order);
 })
 
 app.get('/editOrder', async (req, res) => {
@@ -153,6 +148,8 @@ app.get('/editOrder', async (req, res) => {
         await Pritime.updateOne({ _id: _id }, { orderStatus: 2 })
     } else if (editType === 'del') {
         await Pritime.deleteOne({ _id: _id })
+    } else if (editType === 'return') {
+        await Pritime.updateOne({ _id: _id }, { orderStatus: 0 })
     }
     res.end('ok')
 })
@@ -205,6 +202,6 @@ app.get('/orderContact', async (req, res) => {
     })
 })
 
-app.listen(3001, () => {
-    console.log('Server listenning part 3001');
+app.listen(3000, () => {
+    console.log('Server listenning part 3000');
 })
