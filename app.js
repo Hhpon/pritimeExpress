@@ -204,7 +204,7 @@ app.get('/orderContact', async (req, res) => {
     let options = {
         "touser": pritimeMes.openId,
         "template_id": "yAo8fZ9yoGDYNiLbtF-tTtbfAF2_Pgrc0tGoI-7XRsg",
-        "page": "/pages/order/order?type=onGoing",
+        "page": "pages/order/order?type=onGoing",
         "form_id": pritimeMes.formId,
         "data": {
             "keyword1": {

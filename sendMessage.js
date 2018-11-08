@@ -34,7 +34,7 @@ async function sendMessage(data) {
         console.log('没发现access');
         accessToken = await getAccessToken().access_token;
     }
-    console.log(accessToken);
+    console.log(data);
     axios({
         method: 'post',
         url: 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + accessToken,
