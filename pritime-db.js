@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('./db.js');
 
 const PritimeSchema = new mongoose.Schema({
     name: String,
@@ -13,10 +13,12 @@ const PritimeSchema = new mongoose.Schema({
     nickName: String,
     orderStatus: Number,
     openId: String,
+    formId: String,
     contactName: String,
     contactSex: String,
     contactTelNum: String,
-    contactWechatNum: String
+    contactWechatNum: String,
+    contactOpenId:String
 })
 
 module.exports = mongoose.model('Pritime', PritimeSchema);

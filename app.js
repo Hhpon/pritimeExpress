@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const User = require('./user-db');
 const Pritime = require('./pritime-db');
+const sendMessage = require('./sendMessage');
 
 const app = express();
 
@@ -89,6 +90,7 @@ app.get('/getUserinfo', async (req, res) => {
 app.post('/issuePritime', async (req, res) => {
     let personInfomation = req.body.personInfomation;
     let openId = req.body.openId;
+    let formId = req.body.formId;
 
     for (let item in personInfomation) {
         if (item !== 'note') {
@@ -103,6 +105,7 @@ app.post('/issuePritime', async (req, res) => {
     personInfomation.avatarUrl = userInfo.avatarUrl;
     personInfomation.nickName = userInfo.nickName;
     personInfomation.openId = openId;
+    personInfomation.formId = formId;
     personInfomation.orderStatus = 0;
 
     console.log(personInfomation);
@@ -117,6 +120,7 @@ app.get('/getUserRecord', async (req, res) => {
 
     let userRecord = await Pritime.findOne({ openId: openId })
     console.log(userRecord);
+    console.log('getUserRecord');
     if (userRecord) {
         res.json(userRecord);
     } else {
@@ -135,8 +139,8 @@ app.get('/getOrder', async (req, res) => {
         orderStatus = 2;
     }
 
-    let order = await Pritime.find({ openId: openid, orderStatus: orderStatus });
-    
+    let order = await Pritime.find({ $or: [{ openId: openid, orderStatus: orderStatus }, { contactOpenId: openid, orderStatus: orderStatus }] });
+
     res.json(order);
 })
 
@@ -149,7 +153,7 @@ app.get('/editOrder', async (req, res) => {
     } else if (editType === 'del') {
         await Pritime.deleteOne({ _id: _id })
     } else if (editType === 'return') {
-        await Pritime.updateOne({ _id: _id }, { orderStatus: 0 })
+        await Pritime.updateOne({ _id: _id }, { orderStatus: 0, $unset: { contactName: '', contactSex: '', contactTelNum: '', contactWechatNum: '', contactOpenId: '' } })
     }
     res.end('ok')
 })
@@ -193,7 +197,38 @@ app.get('/orderContact', async (req, res) => {
     let wechatNum = userInfo.wechatNum;
     let sex = userInfo.sex;
 
-    Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum }, (err, doc) => {
+    let pritimeMes =await Pritime.findOne({ _id: _id });
+
+    let options = {
+        "touser": pritimeMes.openId,
+        "template_id": "yAo8fZ9yoGDYNiLbtF-tTtbfAF2_Pgrc0tGoI-7XRsg",
+        "page": "/pages/order/order?type=onGoing",
+        "form_id": pritimeMes.formId,
+        "data": {
+            "keyword1": {
+                "value": name
+            },
+            "keyword2": {
+                "value": wechatNum
+            },
+            "keyword3": {
+                "value": telNum
+            },
+            "keyword4": {
+                "value": pritimeMes.partimeDate
+            },
+            "keyword5": {
+                "value": pritimeMes.timeRadio
+            },
+            "keyword6": {
+                "value": "消息已经下发，请尽快联系!"
+            }
+        },
+    }
+
+    sendMessage(options);
+
+    Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum, contactOpenId: openId }, (err, doc) => {
         if (err) {
             res.end('no');
             return;
