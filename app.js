@@ -202,7 +202,7 @@ app.get('/orderContact', async (req, res) => {
     let touser = 'openid:' + pritimeMes.openId;
 
     let options = {
-        "touser": pritimeMes.openId,
+        "touser": touser,
         "template_id": "yAo8fZ9yoGDYNiLbtF-tTtbfAF2_Pgrc0tGoI-7XRsg",
         "page": "pages/order/order?type=onGoing",
         "form_id": pritimeMes.formId,
