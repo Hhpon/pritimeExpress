@@ -197,7 +197,9 @@ app.get('/orderContact', async (req, res) => {
     let wechatNum = userInfo.wechatNum;
     let sex = userInfo.sex;
 
-    let pritimeMes =await Pritime.findOne({ _id: _id });
+    let pritimeMes = await Pritime.findOne({ _id: _id });
+
+    let touser = 'openid:' + pritimeMes.openId;
 
     let options = {
         "touser": pritimeMes.openId,

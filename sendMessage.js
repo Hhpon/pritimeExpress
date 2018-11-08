@@ -5,7 +5,7 @@ const Access = require('./access-db')
 
 function getAccessToken() {
     return new Promise((resolve, reject) => {
-        axios.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx96491a51058b7949&secret=9ee9dad2583dcae1f34582781cd96551').then((result) => {
+        axios.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx96491a51058b7949&secret=116012e650ea99a8e675f36a98ac3dcf').then((result) => {
             let accessToken = result.data;
             let expires_on = new Date().getTime();
             accessToken.expires_on = expires_on;
@@ -20,14 +20,21 @@ function getAccessToken() {
 async function sendMessage(data) {
 
     let access = await Access.findOne();
-    console.log(access);
-    let expires_now = new Date().getTime();
-    let expires_value = (expires_now - access.expires_on) / 1000;
-    let accessToken = access.access_token;
-    if (expires_value >= 7200 || !expires_value) {
-        console.log('时间已过');
+    let accessToken;
+    if(!!access){
+        console.log('发现access');
+        let expires_now = new Date().getTime();
+        let expires_value = (expires_now - access.expires_on) / 1000;
+        accessToken = access.access_token;
+        if (expires_value >= 7200 || !expires_value) {
+            console.log('时间已过');
+            accessToken = await getAccessToken().access_token;
+        }
+    }else{
+        console.log('没发现access');
         accessToken = await getAccessToken().access_token;
     }
+    console.log(accessToken);
     axios({
         method: 'post',
         url: 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + accessToken,
