@@ -20,6 +20,7 @@ function getAccessToken() {
 async function sendMessage(data) {
 
     let access = await Access.findOne();
+    console.log(access);
     let expires_now = new Date().getTime();
     let expires_value = (expires_now - access.expires_on) / 1000;
     let accessToken = access.access_token;
