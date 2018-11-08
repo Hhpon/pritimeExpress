@@ -23,7 +23,7 @@ async function sendMessage(data) {
     let expires_now = new Date().getTime();
     let expires_value = (expires_now - access.expires_on) / 1000;
     let accessToken = access.access_token;
-    if (expires_value >= 7200) {
+    if (expires_value >= 7200 || !expires_value) {
         console.log('时间已过');
         accessToken = await getAccessToken().access_token;
     }
