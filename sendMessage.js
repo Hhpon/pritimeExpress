@@ -21,20 +21,23 @@ async function sendMessage(data) {
 
     let access = await Access.findOne();
     let accessToken;
-    if(!!access){
+    if (!!access) {
         console.log('发现access');
         let expires_now = new Date().getTime();
         let expires_value = (expires_now - access.expires_on) / 1000;
         accessToken = access.access_token;
         if (expires_value >= 7200 || !expires_value) {
             console.log('时间已过');
-            accessToken = await getAccessToken().access_token;
+            let access = await getAccessToken();
+            accessToken = access.access_token
         }
-    }else{
+    } else {
         console.log('没发现access');
-        accessToken = await getAccessToken().access_token;
+        let access = await getAccessToken();
+        accessToken = access.access_token
     }
     console.log(data);
+    console.log(accessToken);
     axios({
         method: 'post',
         url: 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + accessToken,
