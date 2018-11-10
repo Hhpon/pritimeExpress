@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const rp = require('request-promise');
+const axios = require('axios')
 const User = require('./user-db');
 const Pritime = require('./pritime-db');
 const sendMessage = require('./sendMessage');
@@ -57,20 +58,19 @@ app.post('/onLogin', (req, res) => {
     let code = req.body.code;
     let userInfo = req.body.userInfo;
 
-    rp({
+    axios({
         url: 'https://api.weixin.qq.com/sns/jscode2session?appid=wx96491a51058b7949&secret=116012e650ea99a8e675f36a98ac3dcf&js_code=' + code + '&grant_type=authorization_code'
     }).then(result => {
-        try {
-            result = JSON.parse(result);
-        } catch (error) {
-            console.log(error);
-        }
-        userInfo.openId = result.openid;
+        console.log(result.data.openid);
+        userInfo.openId = result.data.openid;
+        console.log(userInfo.openid);
         User.create(userInfo, (err, docs) => {
             if (err) {
+                console.log(err);
                 res.send('no')
             }
-            res.send(result.openid);
+            console.log('object');
+            res.send(result.data.openid);
         })
     })
 })

@@ -12,7 +12,7 @@ console.log(dbUrl);
 mongoose.connect(dbUrl, { useNewUrlParser: true });
 
 mongoose.connection.on('connected', function () {
-    console.log('Mongoose connection open to' + 'mongodb://localhost:27017/schoolPritime');
+    console.log('Mongoose connection open to' + dbUrl);
 })
 
 mongoose.connection.on('error', function (err) {
