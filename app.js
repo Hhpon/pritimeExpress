@@ -203,6 +203,11 @@ app.get('/orderContact', async (req, res) => {
 
     let pritimeMes = await Pritime.findOne({ _id: _id });
 
+    if(Pritime.orderStatus !== 0){
+        res.send('already')
+        return;
+    }
+
     let options = {
         "touser": pritimeMes.openId,
         "template_id": "yAo8fZ9yoGDYNiLbtF-tTooeGBsT3dbIDvF7j5KyV0M",
@@ -230,15 +235,7 @@ app.get('/orderContact', async (req, res) => {
         }
     }
 
-    let errmsg = await sendMessage(options);
-
-    console.log('app');
-    console.log(errmsg);
-
-    if (errmsg != 'ok') {
-        res.send('no');
-        return;
-    }
+    sendMessage(options);
 
     Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum, contactOpenId: openId }, (err, doc) => {
         if (err) {
