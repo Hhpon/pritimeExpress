@@ -239,6 +239,7 @@ app.get('/orderContact', async (req, res) => {
 
     Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum, contactOpenId: openId }, (err, doc) => {
         if (err) {
+            console.log(err);
             res.send('no');
             return;
         }
