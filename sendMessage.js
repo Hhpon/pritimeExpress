@@ -1,7 +1,6 @@
-const axios = require('axios');
+const rp = require('request-promise')
+const axios = require('axios')
 const Access = require('./access-db')
-
-//https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET
 
 function getAccessToken() {
     return new Promise((resolve, reject) => {
@@ -17,7 +16,7 @@ function getAccessToken() {
     })
 }
 
-async function sendMessage(data) {
+async function sendMessage(options) {
 
     let access = await Access.findOne();
     let accessToken;
@@ -36,14 +35,15 @@ async function sendMessage(data) {
         let access = await getAccessToken();
         accessToken = access.access_token
     }
-    console.log(data);
-    console.log(accessToken);
+
     axios({
         method: 'post',
         url: 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + accessToken,
-        data: data
+        data: options
     }).then(res => {
-        console.log(res.data);
+        console.log(res.data.errmsg);
+        let errmsg = res.data.errmsg;
+        return errmsg;
     })
 }
 

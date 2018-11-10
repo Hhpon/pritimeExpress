@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const rp = require('request-promise');
 const User = require('./user-db');
 const Pritime = require('./pritime-db');
 const sendMessage = require('./sendMessage');
@@ -53,18 +54,24 @@ app.post('/getPritime', (req, res) => {
 })
 
 app.post('/onLogin', (req, res) => {
-    let openId = req.body.code;
+    let code = req.body.code;
     let userInfo = req.body.userInfo;
 
-    userInfo.openId = openId;
-
-    console.log(userInfo);
-
-    User.create(userInfo, (err, docs) => {
-        if (err) {
-            res.send('no')
+    rp({
+        url: 'https://api.weixin.qq.com/sns/jscode2session?appid=wx96491a51058b7949&secret=116012e650ea99a8e675f36a98ac3dcf&js_code=' + code + '&grant_type=authorization_code'
+    }).then(result => {
+        try {
+            result = JSON.parse(result);
+        } catch (error) {
+            console.log(error);
         }
-        res.send('ok');
+        userInfo.openId = result.openid;
+        User.create(userInfo, (err, docs) => {
+            if (err) {
+                res.send('no')
+            }
+            res.send(result.openid);
+        })
     })
 })
 
@@ -199,13 +206,11 @@ app.get('/orderContact', async (req, res) => {
 
     let pritimeMes = await Pritime.findOne({ _id: _id });
 
-    let touser = 'openid:' + pritimeMes.openId;
-
     let options = {
         "touser": pritimeMes.openId,
-        "template_id": "yAo8fZ9yoGDYNiLbtF-tTtbfAF2_Pgrc0tGoI-7XRsg",
+        "template_id": "yAo8fZ9yoGDYNiLbtF-tTooeGBsT3dbIDvF7j5KyV0M",
         "page": "pages/order/order?type=onGoing",
-        "form_id": pritimeMes.formId,
+        "form_id": "1541833580540",
         "data": {
             "keyword1": {
                 "value": name
@@ -223,19 +228,24 @@ app.get('/orderContact', async (req, res) => {
                 "value": pritimeMes.timeRadio
             },
             "keyword6": {
-                "value": "消息已经下发，请尽快联系!"
+                "value": "消息已经下发，请尽快取得联系!"
             }
-        },
+        }
     }
 
-    sendMessage(options);
+    let errmsg = sendMessage(options);
+
+    if (errmsg !== 'ok') {
+        res.send('no');
+        return;
+    }
 
     Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum, contactOpenId: openId }, (err, doc) => {
         if (err) {
-            res.end('no');
+            res.send('no');
             return;
         }
-        res.end('ok');
+        res.send('ok');
     })
 })
 
