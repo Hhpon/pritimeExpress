@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const rp = require('request-promise');
 const axios = require('axios')
 const User = require('./user-db');
 const Pritime = require('./pritime-db');

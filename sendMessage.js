@@ -1,4 +1,3 @@
-const rp = require('request-promise')
 const axios = require('axios')
 const Access = require('./access-db')
 
