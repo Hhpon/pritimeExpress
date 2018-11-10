@@ -232,7 +232,10 @@ app.get('/orderContact', async (req, res) => {
 
     let errmsg = sendMessage(options);
 
-    if (errmsg !== 'ok') {
+    console.log('app');
+    console.log(errmsg);
+
+    if (errmsg != 'ok') {
         res.send('no');
         return;
     }
