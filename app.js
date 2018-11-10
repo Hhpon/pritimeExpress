@@ -230,7 +230,7 @@ app.get('/orderContact', async (req, res) => {
         }
     }
 
-    let errmsg = sendMessage(options);
+    let errmsg = await sendMessage(options);
 
     console.log('app');
     console.log(errmsg);
