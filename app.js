@@ -87,9 +87,7 @@ app.post('/updateUserinfo', (req, res) => {
 
 app.get('/getUserinfo', async (req, res) => {
     let openId = req.query.openId;
-
     let userInfo = await User.findOne({ openId: openId })
-    console.log(userInfo);
     res.json(userInfo);
 })
 
@@ -209,7 +207,7 @@ app.get('/orderContact', async (req, res) => {
         "touser": pritimeMes.openId,
         "template_id": "yAo8fZ9yoGDYNiLbtF-tTooeGBsT3dbIDvF7j5KyV0M",
         "page": "pages/order/order?type=onGoing",
-        "form_id": "1541833580540",
+        "form_id": pritimeMes.formId,
         "data": {
             "keyword1": {
                 "value": name
