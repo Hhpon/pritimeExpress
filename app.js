@@ -157,7 +157,8 @@ app.get('/editOrder', async (req, res) => {
     } else if (editType === 'del') {
         await Pritime.deleteOne({ _id: _id })
     } else if (editType === 'return') {
-        await Pritime.updateOne({ _id: _id }, { orderStatus: 0, $unset: { contactName: '', contactSex: '', contactTelNum: '', contactWechatNum: '', contactOpenId: '' } })
+        let formId = req.query.formId;
+        await Pritime.updateOne({ _id: _id }, { orderStatus: 0, formId: formId, $unset: { contactName: '', contactSex: '', contactTelNum: '', contactWechatNum: '', contactOpenId: '' } })
     }
     res.end('ok')
 })
