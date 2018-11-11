@@ -204,9 +204,12 @@ app.get('/orderContact', async (req, res) => {
 
     let pritimeMes = await Pritime.findOne({ _id: _id });
 
-    console.log(pritimeMes.orderStatus != 0);
+    if(pritimeMes.openId === openId){
+        res.send('same')
+        return;
+    }
 
-    if (pritimeMes.orderStatus != 0) {
+    if (pritimeMes.orderStatus !== 0) {
         res.send('already')
         return;
     }
