@@ -143,9 +143,22 @@ app.get('/getOrder', async (req, res) => {
         orderStatus = 2;
     }
 
-    let order = await Pritime.find({ $or: [{ openId: openid, orderStatus: orderStatus }, { contactOpenId: openid, orderStatus: orderStatus }] });
+    let order = await Pritime.find({ openId: openid, orderStatus: orderStatus });
 
     res.json(order);
+})
+
+app.get('/getMyOrder', (req, res) => {
+    console.log(req.query.openId);
+    let openId = req.query.openId;
+
+    Pritime.find({ contactOpenId: openId }, (err, doc) => {
+        if (err) {
+            res.send('err');
+            return;
+        }
+        res.json(doc)
+    })
 })
 
 app.get('/editOrder', async (req, res) => {
@@ -204,7 +217,7 @@ app.get('/orderContact', async (req, res) => {
 
     let pritimeMes = await Pritime.findOne({ _id: _id });
 
-    if(pritimeMes.openId === openId){
+    if (pritimeMes.openId === openId) {
         res.send('same')
         return;
     }
