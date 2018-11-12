@@ -166,7 +166,7 @@ app.get('/editOrder', async (req, res) => {
             "form_id": pritimeMes.contactFormId,
             "data": {
                 "keyword1": {
-                    "value": pritimeMes.partimeDate + '&nasp' + pritimeMes.timeRadio
+                    "value": pritimeMes.partimeDate + '&&' + pritimeMes.timeRadio
                 },
                 "keyword2": {
                     "value": pritimeMes.name
@@ -195,7 +195,7 @@ app.get('/editOrder', async (req, res) => {
             "form_id": pritimeMes.contactFormId,
             "data": {
                 "keyword1": {
-                    "value": pritimeMes.partimeDate + '&nasp' + pritimeMes.timeRadio
+                    "value": pritimeMes.partimeDate + '&&' + pritimeMes.timeRadio
                 },
                 "keyword2": {
                     "value": pritimeMes.wechatNum
