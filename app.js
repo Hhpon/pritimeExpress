@@ -163,6 +163,7 @@ app.get('/editOrder', async (req, res) => {
         let options = {
             "touser": pritimeMes.contactOpenId,
             "template_id": "9BKDqQ6VAnKXGeBQKtzMSC5cEwB9jMt0llrbx9KhiIo",
+            "page": "pages/index/index",
             "form_id": pritimeMes.contactFormId,
             "data": {
                 "keyword1": {
@@ -192,6 +193,7 @@ app.get('/editOrder', async (req, res) => {
         let options = {
             "touser": pritimeMes.contactOpenId,
             "template_id": "d0GKD7mHeiLCLi4jxQRgrCI8G7uqUxo8rEezc3vcMGk",
+            "page": "pages/index/index",
             "form_id": pritimeMes.contactFormId,
             "data": {
                 "keyword1": {
