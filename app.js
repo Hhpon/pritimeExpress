@@ -155,7 +155,7 @@ app.get('/getMyOrder', (req, res) => {
 
 app.get('/editOrder', async (req, res) => {
     let _id = req.query._id;
-    let editType = req.query.editType; 
+    let editType = req.query.editType;
 
     if (editType === 'complete') {
         await Pritime.updateOne({ _id: _id }, { orderStatus: 2 })
@@ -166,7 +166,7 @@ app.get('/editOrder', async (req, res) => {
             "form_id": pritimeMes.contactFormId,
             "data": {
                 "keyword1": {
-                    "value": pritimeMes.partimeDate + '&&' + pritimeMes.timeRadio
+                    "value": pritimeMes.partimeDate + '&' + pritimeMes.timeRadio
                 },
                 "keyword2": {
                     "value": pritimeMes.name
@@ -191,11 +191,11 @@ app.get('/editOrder', async (req, res) => {
 
         let options = {
             "touser": pritimeMes.contactOpenId,
-            "template_id": "9BKDqQ6VAnKXGeBQKtzMSC5cEwB9jMt0llrbx9KhiIo",
+            "template_id": "d0GKD7mHeiLCLi4jxQRgrCI8G7uqUxo8rEezc3vcMGk",
             "form_id": pritimeMes.contactFormId,
             "data": {
                 "keyword1": {
-                    "value": pritimeMes.partimeDate + '&&' + pritimeMes.timeRadio
+                    "value": pritimeMes.partimeDate + '&' + pritimeMes.timeRadio
                 },
                 "keyword2": {
                     "value": pritimeMes.wechatNum
