@@ -18,7 +18,8 @@ const PritimeSchema = new mongoose.Schema({
     contactSex: String,
     contactTelNum: String,
     contactWechatNum: String,
-    contactOpenId:String
+    contactOpenId:String,
+    contactForId: String
 })
 
 module.exports = mongoose.model('Pritime', PritimeSchema);

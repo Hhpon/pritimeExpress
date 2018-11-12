@@ -60,15 +60,12 @@ app.post('/onLogin', (req, res) => {
     axios({
         url: 'https://api.weixin.qq.com/sns/jscode2session?appid=wx96491a51058b7949&secret=116012e650ea99a8e675f36a98ac3dcf&js_code=' + code + '&grant_type=authorization_code'
     }).then(result => {
-        console.log(result.data.openid);
         userInfo.openId = result.data.openid;
-        console.log(userInfo.openid);
         User.create(userInfo, (err, docs) => {
             if (err) {
                 console.log(err);
                 res.send('no')
             }
-            console.log('object');
             res.send(result.data.openid);
         })
     })
@@ -112,8 +109,6 @@ app.post('/issuePritime', async (req, res) => {
     personInfomation.formId = formId;
     personInfomation.orderStatus = 0;
 
-    console.log(personInfomation);
-
     await Pritime.create(personInfomation)
 
     res.end('ok')
@@ -123,8 +118,6 @@ app.get('/getUserRecord', async (req, res) => {
     let openId = req.query.openId;
 
     let userRecord = await Pritime.findOne({ openId: openId })
-    console.log(userRecord);
-    console.log('getUserRecord');
     if (userRecord) {
         res.json(userRecord);
     } else {
@@ -149,7 +142,6 @@ app.get('/getOrder', async (req, res) => {
 })
 
 app.get('/getMyOrder', (req, res) => {
-    console.log(req.query.openId);
     let openId = req.query.openId;
 
     Pritime.find({ contactOpenId: openId }, (err, doc) => {
@@ -163,15 +155,64 @@ app.get('/getMyOrder', (req, res) => {
 
 app.get('/editOrder', async (req, res) => {
     let _id = req.query._id;
-    let editType = req.query.editType;
+    let editType = req.query.editType; 
 
     if (editType === 'complete') {
         await Pritime.updateOne({ _id: _id }, { orderStatus: 2 })
+        let pritimeMes = await Pritime.findOne({ _id: _id })
+        let options = {
+            "touser": pritimeMes.contactOpenId,
+            "template_id": "9BKDqQ6VAnKXGeBQKtzMSC5cEwB9jMt0llrbx9KhiIo",
+            "form_id": pritimeMes.contactFormId,
+            "data": {
+                "keyword1": {
+                    "value": pritimeMes.partimeDate + '&nasp' + pritimeMes.timeRadio
+                },
+                "keyword2": {
+                    "value": pritimeMes.name
+                },
+                "keyword3": {
+                    "value": '该订单已经被发单人视为已完成，如有问题请拨打下方投诉电话！'
+                },
+                "keyword4": {
+                    "value": '18845573607'
+                }
+            }
+        }
+
+        sendMessage(options);
+
     } else if (editType === 'del') {
         await Pritime.deleteOne({ _id: _id })
     } else if (editType === 'return') {
         let formId = req.query.formId;
+
+        let pritimeMes = await Pritime.findOne({ _id: _id })
+
+        let options = {
+            "touser": pritimeMes.contactOpenId,
+            "template_id": "9BKDqQ6VAnKXGeBQKtzMSC5cEwB9jMt0llrbx9KhiIo",
+            "form_id": pritimeMes.contactFormId,
+            "data": {
+                "keyword1": {
+                    "value": pritimeMes.partimeDate + '&nasp' + pritimeMes.timeRadio
+                },
+                "keyword2": {
+                    "value": pritimeMes.wechatNum
+                },
+                "keyword3": {
+                    "value": '该订单已经被发单人取消，即不再为您服务，如果是发单人擅自取消，请拨打下方的投诉电话！'
+                },
+                "keyword4": {
+                    "value": '18845573607'
+                }
+            }
+        }
+
+        sendMessage(options);
+
         await Pritime.updateOne({ _id: _id }, { orderStatus: 0, formId: formId, $unset: { contactName: '', contactSex: '', contactTelNum: '', contactWechatNum: '', contactOpenId: '' } })
+
     }
     res.end('ok')
 })
@@ -204,9 +245,10 @@ app.post('/addUserInfo', (req, res) => {
     });
 })
 
-app.get('/orderContact', async (req, res) => {
-    let _id = req.query._id;
-    let openId = req.query.openId;
+app.post('/orderContact', async (req, res) => {
+    let _id = req.body._id;
+    let openId = req.body.openId;
+    let contactFormId = req.body.formId
 
     const userInfo = await User.findOne({ openId: openId })
 
@@ -256,7 +298,7 @@ app.get('/orderContact', async (req, res) => {
 
     sendMessage(options);
 
-    Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum, contactOpenId: openId }, (err, doc) => {
+    Pritime.updateOne({ _id: _id }, { orderStatus: 1, contactName: name, contactSex: sex, contactTelNum: telNum, contactWechatNum: wechatNum, contactOpenId: openId, contactFormId: contactFormId }, (err, doc) => {
         if (err) {
             console.log(err);
             res.send('no');
