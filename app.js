@@ -225,11 +225,9 @@ app.post('/addUserInfo', (req, res) => {
     let openId = req.body.openId;
 
     for (let item in personInfomation) {
-        if (item !== 'note') {
-            if (!personInfomation[item]) {
-                res.end('no');
-                return;
-            }
+        if (!personInfomation[item]) {
+            res.end('no');
+            return;
         }
     }
 
