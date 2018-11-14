@@ -311,6 +311,16 @@ app.post('/orderContact', async (req, res) => {
     })
 })
 
+app.get('/getData', (req, res) => {
+    User.find((err, doc) => {
+        if(err){
+            res.send('no');
+            return;
+        }
+        res.json(doc)
+    })
+})
+
 app.listen(3001, () => {
     console.log('Server listenning part 3001');
 })
