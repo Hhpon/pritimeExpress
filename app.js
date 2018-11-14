@@ -43,7 +43,7 @@ app.post('/getPritime', (req, res) => {
         timeRadio = '晚自习';
     }
 
-    Pritime.find({ partimeDate: todayDate, timeRadio: timeRadio, orderStatus: 0 }, (err, docs) => {
+    Pritime.find({ partimeDate: todayDate, timeRadio: timeRadio, orderStatus: 0, auditStatus: true }, (err, docs) => {
         if (err) {
             console.log(err);
             res.send(err);
@@ -105,6 +105,7 @@ app.post('/issuePritime', async (req, res) => {
     const userInfo = await User.findOne({ openId: openId })
     personInfomation.avatarUrl = userInfo.avatarUrl;
     personInfomation.nickName = userInfo.nickName;
+    personInfomation.auditStatus = userInfo.auditStatus;
     personInfomation.openId = openId;
     personInfomation.formId = formId;
     personInfomation.orderStatus = 0;
@@ -235,8 +236,10 @@ app.post('/addUserInfo', (req, res) => {
     let sex = personInfomation.sex;
     let telNum = personInfomation.telNum;
     let wechatNum = personInfomation.wechatNum;
+    let student_id = personInfomation.student_id;
+    let auditStatus = true
 
-    User.updateOne({ openId: openId }, { name: name, sex: sex, telNum: telNum, wechatNum: wechatNum }, (err, doc) => {
+    User.updateOne({ openId: openId }, { name: name, sex: sex, telNum: telNum, wechatNum: wechatNum, student_id: student_id, auditStatus: auditStatus }, (err, doc) => {
         if (err) {
             res.end('no');
             return;

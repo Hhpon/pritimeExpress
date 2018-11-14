@@ -14,11 +14,12 @@ const PritimeSchema = new mongoose.Schema({
     orderStatus: Number,
     openId: String,
     formId: String,
+    auditStatus: Boolean,
     contactName: String,
     contactSex: String,
     contactTelNum: String,
     contactWechatNum: String,
-    contactOpenId:String,
+    contactOpenId: String,
     contactFormId: String
 })
 

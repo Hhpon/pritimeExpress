@@ -12,7 +12,9 @@ const UserSchema = new mongoose.Schema({
     name: String,
     telNum: Number,
     wechatNum: String,
-    sex: String
+    sex: String,
+    student_id: String,
+    auditStatus: Boolean
 })
 
 module.exports = mongoose.model('User', UserSchema);
