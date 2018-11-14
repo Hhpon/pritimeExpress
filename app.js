@@ -313,11 +313,24 @@ app.post('/orderContact', async (req, res) => {
 
 app.get('/getData', (req, res) => {
     User.find((err, doc) => {
-        if(err){
+        if (err) {
             res.send('no');
             return;
         }
         res.json(doc)
+    })
+})
+
+app.post('/changeAuditStatus', (req, res) => {
+    let _id = req.body._id;
+    let auditStatus = req.body.auditStatus;
+    User.updateOne({ _id: _id }, { auditStatus: auditStatus }, (err, doc) => {
+        if (err) {
+            console.log(err);
+            res.send('no');
+            return;
+        }
+        res.send('ok');
     })
 })
 
